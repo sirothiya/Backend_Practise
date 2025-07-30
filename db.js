@@ -1,7 +1,10 @@
 //use to connect to the database using mongoose library
 const mongoose=require('mongoose')
-const mongoUrl='mongodb://localhost:27017/hotelManagement';
+require('dotenv').config();
 
+
+
+const mongoUrl=process.env.DB_URL || process.env.DB_URL_Local;
 mongoose.connect(mongoUrl,{
     useNewUrlParser:true,
     useUnifiedTopology:true
