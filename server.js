@@ -20,20 +20,20 @@ const logRequest = (req, res, next) => {
 };
 app.use(logRequest);
 
-// const passport=require("./Auth");
-// app.use(passport.initialize());
+const passport=require("./Auth");
+app.use(passport.initialize());
 
 const PersonRoutes = require("./routes/PersonRoutes");
 const MenuRoutes = require("./routes/MenuRoutes");
 
-// const LocalAuthMiddleware=passport.authenticate("local", { session: false })
+const LocalAuthMiddleware=passport.authenticate("local", { session: false })
 
 app.get("/", (req, res) => {
   console.log("Root route hit");
   res.send("Welcome to Hotel... we will try to serve you the best");
 });
 
-app.use("/person", PersonRoutes);
+app.use("/person",LocalAuthMiddleware, PersonRoutes);
 
 app.use("/menu", MenuRoutes);
 

@@ -65,7 +65,8 @@ personSchema.methods.comparePassword = async function (password) {
     const isMatch = await bcrypt.compare(password, person.password);
     return isMatch;
   } catch (err) {
-    throw err;
+    console.error("Error comparing password:", err);
+    throw err; // rethrow the error to be handled by the calling function
   }
 };
 
