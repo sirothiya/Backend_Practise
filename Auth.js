@@ -6,12 +6,11 @@ const Person = require("./models/Person");
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
-      
       const user = await Person.findOne({ username });
       if (!user) {
         return done(null, false, { message: "User not exist" });
       }
-      const isMatchPass = await user.comparePassword(password)
+      const isMatchPass = await user.comparePassword(password);
       if (!isMatchPass) {
         return done(null, false, { message: "Incorrect password" });
       }
@@ -20,7 +19,7 @@ passport.use(
       console.error("Error during authentication:", err);
       return done(err);
     }
-  }) 
+  })
 );
 
-module.exports=passport;
+module.exports = passport;
