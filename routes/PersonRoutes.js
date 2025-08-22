@@ -10,7 +10,11 @@ router.post("/signup", async (req, res) => {
     const person = new Person(data);
     const savedPerson = await person.save();
     console.log("data saved", savedPerson);
-    const token = generateToken(savedPerson.username);
+    const payload = {
+      id: savedPerson.id,
+      username: savedPerson.username,
+    };
+    const token = generateToken(payload);
     console.log(
       "Person data saved successfully with token:",
       savedPerson,
@@ -22,6 +26,25 @@ router.post("/signup", async (req, res) => {
       message: "Error in saving person data",
       error: err.message,
     });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const person = await Person.findOne({ username });
+    if (!person || !(await person.comparePassword(password))) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+    const payload = {
+      id: person.id,
+      username: username,
+    };
+    const token = generateToken(payload);
+    res.json({ token });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
