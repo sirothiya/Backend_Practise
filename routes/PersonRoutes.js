@@ -2,14 +2,21 @@ const express = require("express");
 const router = express.Router();
 
 const Person = require("../models/Person");
+const { jwtMiddleware, generateToken } = require("../jwt");
 
-router.post("/", async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
     const data = req.body;
     const person = new Person(data);
     const savedPerson = await person.save();
-    console.log("Person data saved successfully:", savedPerson);
-    res.status(200).json(savedPerson);
+    console.log("data saved", savedPerson);
+    const token = generateToken(savedPerson.username);
+    console.log(
+      "Person data saved successfully with token:",
+      savedPerson,
+      token
+    );
+    res.status(200).json({ savedPerson, token });
   } catch (err) {
     res.status(500).json({
       message: "Error in saving person data",
