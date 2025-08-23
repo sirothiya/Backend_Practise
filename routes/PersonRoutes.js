@@ -48,7 +48,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/",jwtMiddleware, async (req, res) => {
   try {
     const personData = await Person.find();
     res.status(200).json(personData);
@@ -59,6 +59,22 @@ router.get("/", async (req, res) => {
     });
   }
 });
+
+router.get("/profile",jwtMiddleware,async(req,res)=>{
+  try{
+   const userData=req.user
+   console.log("User data from token:", userData)
+    const userId=userData.id;
+    const user= await Person.findById(userId);
+    res.status(200).json({user})
+   
+  }catch(err){
+    res.status(500).json({
+      message: "Error in fetching user profile",
+      error: err.message,
+    });
+  }
+})
 
 router.get("/:workType", async (req, res) => {
   try {
